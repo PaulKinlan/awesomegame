@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="../../lib/box2d.js"></script>
+    <script>
+    window.requestAnimFrame = (function(){
+          return  window.requestAnimationFrame       || 
+                  window.webkitRequestAnimationFrame || 
+                  window.mozRequestAnimationFrame    || 
+                  window.oRequestAnimationFrame      || 
+                  window.msRequestAnimationFrame     || 
+                  function(/* function */ callback, /* DOMElement */ element){
+                    window.setTimeout(callback, 1000 / 60);
+                  };
+    })();
+    </script>
+    <script>
+    
+    /*
+      Create a ball.  Add a table thing.  Let it drop.
+      
+      To be fair, most of this is copied from http://blog.sethladd.com/2011/09/box2d-javascript-example-walkthrough.html
+    */
+    
+    var world;
+    var ballBody;
+    var gravityVector = new Box2D.Common.Math.b2Vec2(0, 10);
+    var forceVector = new Box2D.Common.Math.b2Vec2(0, 0);
+    var SCALE = 30;
+    
+    window.addEventListener("deviceorientation", function(e) {
+      /*
+      gravityVector.x = (e.gamma / 90) * 10;
+      */
+      var power = Math.abs(e.gamma) * 2; // convert to a unit vector of X
+      var angle = 0;
+      if(e.gamma < 0)
+        angle = 180;
+        
+      forceVector.Set(Math.cos(angle * (Math.PI / 180)) * power, 0);
+      
+      angleDOM.innerText = e.gamma;
+      forceDOM.innerText = forceVector.x + ", " + forceVector.y;
+      
+      ballBody.ApplyForce(forceVector, ballBody.GetWorldCenter());
+                                
+      
+      
+    }, false);
+    
+    var update = function() {
+      world.SetGravity(gravityVector);
+        
+      world.Step(
+         1 / 60   //frame-rate
+         ,  10    //velocity iterations
+         ,  10    //position iterations
+      );
+      
+      world.DrawDebugData();
+      world.ClearForces();
+      requestAnimFrame(update);
+    };
+    </script>
+  </head>
+  <body>
+    <h1>Gravity Test</h1>
+    <canvas id="c" width=640 height=480 style="border: solid black 1px;"></canvas>
+    <p>Angle: <span id="angleDOM"></span></p>
+    <p>Force: <span id="forceDOM"></span></p>
+  </body>
+  <script>
+    var canvas = document.getElementById("c");
+    var ctx = canvas.getContext("2d");
+  
+    var init = function() {
+        world = new Box2D.Dynamics.b2World(gravityVector, true);
+        
+        var fFixtureDef = new Box2D.Dynamics.b2FixtureDef;
+        fFixtureDef.density = 1.0;
+        fFixtureDef.friction = 0.5;
+        fFixtureDef.restitution = 0.2;
+        fFixtureDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
+        fFixtureDef.shape.SetAsBox((600 / SCALE) / 2, (10/SCALE) / 2);
+        
+        var fbodyDef = new Box2D.Dynamics.b2BodyDef;
+        fbodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
+        fbodyDef.position.x = canvas.width / 2 / SCALE;
+        fbodyDef.position.y = canvas.height / SCALE;
+    
+        world.CreateBody(fbodyDef).CreateFixture(fFixtureDef);
+        
+        var ballFixture = new Box2D.Dynamics.b2FixtureDef;
+        ballFixture.density = 1.0;
+        ballFixture.friction = 0.5;
+        ballFixture.restitution = 0.8;
+        ballFixture.shape = new Box2D.Collision.Shapes.b2CircleShape(1);
+        
+        var ballDef = new Box2D.Dynamics.b2BodyDef;
+        ballDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+        ballDef.position.x = Math.random() * 25;
+        ballDef.position.y = Math.random() * 10;
+
+        ballBody = world.CreateBody(ballDef);
+        ballBody.CreateFixture(ballFixture);
+        
+       var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+       debugDraw.SetSprite(ctx);
+       debugDraw.SetDrawScale(SCALE);
+       debugDraw.SetFillAlpha(0.3);
+       debugDraw.SetLineThickness(1.0);
+       debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+       world.SetDebugDraw(debugDraw);
+    };
+  
+    init();
+    requestAnimFrame(update);
+  </script>
+</html>

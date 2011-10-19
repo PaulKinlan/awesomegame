@@ -1,0 +1,1 @@
+Testing multiple fixed fixtures.

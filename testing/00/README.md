@@ -1,0 +1,1 @@
+Setting up a simple fixed object.
