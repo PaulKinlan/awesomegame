@@ -26,10 +26,6 @@
     var gravityVector = new Box2D.Common.Math.b2Vec2(0, 10);
     var SCALE = 30;
     
-    window.addEventListener("deviceorientation", function(e) {
-      gravityVector.x = (e.gamma / 90) * 10;
-    }, false);
-    
     var update = function() {
       world.SetGravity(gravityVector);
         
@@ -52,6 +48,27 @@
   <script>
     var canvas = document.getElementById("c");
     var ctx = canvas.getContext("2d");
+    var ballBody;
+    var gravityVector = new Box2D.Common.Math.b2Vec2(0, 10);
+    var forceVector = new Box2D.Common.Math.b2Vec2(0, 0);
+    var SCALE = 30;
+    
+    window.addEventListener("deviceorientation", function(e) {
+      /*
+      gravityVector.x = (e.gamma / 90) * 10;
+      */
+      var power = Math.abs(e.gamma) * 2; // convert to a unit vector of X
+      var angle = 0;
+      if(e.gamma < 0)
+        angle = 180;
+        
+      forceVector.Set(Math.cos(angle * (Math.PI / 180)) * power, 0);
+      
+      angleDOM.innerText = e.gamma;
+      forceDOM.innerText = forceVector.x + ", " + forceVector.y;
+      
+      ballBody.ApplyForce(forceVector, ballBody.GetWorldCenter());
+    }, false);
   
     var init = function() {
         world = new Box2D.Dynamics.b2World(gravityVector, true);
@@ -61,6 +78,36 @@
         createFixtureRow(3);
         createFixtureRow(4);
         createFixtureRow(5);
+        
+        createBall();
+        
+        createWalls();
+        
+         // Ensure that there is a little bit drawn at the end if needs be.
+        
+        var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+        debugDraw.SetSprite(ctx);
+        debugDraw.SetDrawScale(SCALE);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+        world.SetDebugDraw(debugDraw);
+    };
+    
+    var createBall = function() {
+        var ballFixture = new Box2D.Dynamics.b2FixtureDef;
+        ballFixture.density = 1.0;
+        ballFixture.friction = 0.1;
+        ballFixture.restitution = 0.75;
+        ballFixture.shape = new Box2D.Collision.Shapes.b2CircleShape(0.5);
+        
+        var ballDef = new Box2D.Dynamics.b2BodyDef;
+        ballDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+        ballDef.position.x = 0;
+        ballDef.position.y = 0;
+
+        ballBody = world.CreateBody(ballDef);
+        ballBody.CreateFixture(ballFixture);  
     };
     
     var drawBlock = function(x, y, w, h, f) {
@@ -73,8 +120,18 @@
         b.position.y = y;
         
         world.CreateBody(b).CreateFixture(f);
-
     };
+    
+    var createWalls = function() {
+        var fWallFixtureDef = new Box2D.Dynamics.b2FixtureDef;
+        fWallFixtureDef.density = 1.0;
+        fWallFixtureDef.friction = 0.5;
+        fWallFixtureDef.restitution = 0.2;
+        fWallFixtureDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
+        
+        drawBlock(0,0, 1/SCALE, 480/SCALE, fWallFixtureDef);
+        drawBlock(600/SCALE, 0, 1/SCALE, 480/SCALE, fWallFixtureDef);
+    }
     
     var createFixtureRow = function(row) {
         
@@ -99,7 +156,6 @@
         var holecount = 0;
         
         do {
-            
             maxholecount = Math.ceil((Math.random() * 2));
             var partition = Math.random() * (remainingWidth - ballSize);
             
@@ -116,8 +172,7 @@
                       halfWidth1,
                       (10/SCALE) / 2, 
                       fFixtureDef );
-                            
-                            
+                                          
             offset += offsetIncrement;
             remainingWidth -= offsetIncrement;
             
@@ -133,15 +188,7 @@
                   (10/SCALE) / 2, 
                   fFixtureDef );
         
-        // Ensure that there is a little bit drawn at the end if needs be.
-        
-       var debugDraw = new Box2D.Dynamics.b2DebugDraw();
-       debugDraw.SetSprite(ctx);
-       debugDraw.SetDrawScale(SCALE);
-       debugDraw.SetFillAlpha(0.3);
-       debugDraw.SetLineThickness(1.0);
-       debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
-       world.SetDebugDraw(debugDraw);
+       
     };
   
     init();

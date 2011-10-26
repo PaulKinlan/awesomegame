@@ -1,0 +1,1 @@
+Add a ball into the level.
