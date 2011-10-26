@@ -1,12 +1,20 @@
 import webapp2
 
+jinja_environment = jinja2.Environment(                              
+        loader=jinja2.FileSystemLoader(
+        os.path.dirname(__file__)))
+
 class RootHandler(webapp2.RequestHandler):
     def get(self):
-        pass
+        template = jinja_environment.get_template(
+            os.path.join("templates", "game.html"))
+        self.response.out.write(template.render())  
     
 class GameHandler(webapp2.RequestHandler):
     def get(self, level):
-      pass
+        template = jinja_environment.get_template(
+            os.path.join("templates", "game.html"))
+        self.response.out.write(template.render()) 
   
 class HighScores(webapp2.RequestHandler):
     def get(self):
