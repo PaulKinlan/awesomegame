@@ -101,7 +101,8 @@ var Game = new (function() {
     };
     
     this.takeInput = function(direction) {
-        forceVector.Set(direction, 0);
+        if(forceVector)
+            forceVector.Set(direction, 0);
     };
     
     var drawFrame = function() {
