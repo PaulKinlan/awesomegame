@@ -2,7 +2,7 @@ var Game = new (function() {
     var gravityVector;
     var forceVector;
     var world;
-    var canvas = document.getElementByID("game");
+    var canvas = document.getElementById("game");
     var content = canvas.getContext("2d");
     var SCALE = 30;
     var ballBody;
