@@ -75,6 +75,18 @@ var Game = new (function() {
                   fFixtureDef );
     };
     
+    var drawBlock = function(x, y, w, h, f) {
+        f.shape.SetAsBox(w, h);
+            
+        // Add first partition.
+        var b = new Box2D.Dynamics.b2BodyDef;
+        b.type = Box2D.Dynamics.b2Body.b2_staticBody;
+        b.position.x = x;
+        b.position.y = y;
+        
+        world.CreateBody(b).CreateFixture(f);
+    };
+    
     this.loadLevel = function(level) {
         this.init();
     };
@@ -134,7 +146,7 @@ var Game = new (function() {
 })();
 
 window.addEventListener("DOMContentLoaded", function(e) {
-      
+    Game.loadLevel(1);
 }, false);
 
 window.addEventListener("resize", function(e) {
