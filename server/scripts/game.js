@@ -97,6 +97,7 @@ var Game = new (function() {
         gravityVector = new Box2D.Common.Math.b2Vec2(0, 10);
         forceVector = new Box2D.Common.Math.b2Vec2(0, 0);
         world = new Box2D.Dynamics.b2World(gravityVector, true);
+        seed = 0;
         
         createBall();
         createWalls();
@@ -106,6 +107,14 @@ var Game = new (function() {
         createFixtureRow(4, seed);
         // Might not want to game tick
         gameTick();
+        
+        var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+        debugDraw.SetSprite(context);
+        debugDraw.SetDrawScale(SCALE);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+        world.SetDebugDraw(debugDraw);
     };
     
     this.resize = function(width, height) {
