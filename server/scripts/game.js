@@ -2,8 +2,8 @@ var Game = new (function() {
     var gravityVector;
     var forceVector;
     var world;
-    var canvas = document.getElementById("game");
-    var content = canvas.getContext("2d");
+    var canvas;
+    var content;
     var SCALE = 30;
     var ballBody;
     
@@ -80,6 +80,8 @@ var Game = new (function() {
     };
     
     this.init = function() {
+        canvas = document.getElementById("game");
+        context = canvas.getContext("2d");
         gravityVector = new Box2D.Common.Math.b2Vec2(0, 10);
         forceVector = new Box2D.Common.Math.b2Vec2(0, 0);
         world = new Box2D.Dynamics.b2World(gravityVector, true);
