@@ -1,4 +1,5 @@
 import webapp2
+import jinja
 
 jinja_environment = jinja2.Environment(                              
         loader=jinja2.FileSystemLoader(
