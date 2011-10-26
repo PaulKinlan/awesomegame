@@ -132,11 +132,11 @@ var Game = new (function() {
     };
 })();
 
-window.addEventListner("DOMContentLoaded", function(e) {
+window.addEventListener("DOMContentLoaded", function(e) {
       
 }, false);
 
-window.addEventListner("resize", function(e) {
+window.addEventListener("resize", function(e) {
    Game.resize(document.width, document.height);
 });
 
