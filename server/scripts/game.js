@@ -122,6 +122,9 @@ var Game = new (function() {
             canvas.width = width;
             canvas.height = height;
         }
+        if(context) {
+            context.scale(Math.min(window.innerWidth / width, window.innerHeight / height));   
+        }
     };
     
     this.takeInput = function(direction) {
