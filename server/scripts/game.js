@@ -162,12 +162,12 @@ var Game = new (function() {
 })();
 
 window.addEventListener("DOMContentLoaded", function(e) {
-    Game.resize(document.width, document.height);
+    Game.resize(window.innerWidth, window.innerHeight);
     Game.loadLevel(1);
 }, false);
 
 window.addEventListener("resize", function(e) {
-   Game.resize(document.width, document.height);
+   Game.resize(window.innerWidth, window.innerHeight);
 });
 
 window.addEventListener("deviceorientation", function(e) {
