@@ -118,7 +118,7 @@ var Game = new (function() {
     };
     
     this.resize = function(width, height) {
-        var scale = Math.min(window.innerWidth / width, window.innerHeight / height);
+        var scale = Math.min(width / 600, height / 480);
         if(canvas) {
             canvas.width = width;
             canvas.height = height;
