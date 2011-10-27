@@ -118,12 +118,13 @@ var Game = new (function() {
     };
     
     this.resize = function(width, height) {
+        var scale = Math.min(window.innerWidth / width, window.innerHeight / height);
         if(canvas) {
             canvas.width = width;
             canvas.height = height;
         }
         if(context) {
-            context.scale(Math.min(window.innerWidth / width, window.innerHeight / height));   
+            context.scale(scale, scale);   
         }
     };
     
