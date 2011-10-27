@@ -118,8 +118,10 @@ var Game = new (function() {
     };
     
     this.resize = function(width, height) {
-        canvas.width = width;
-        canvas.height = height;
+        if(canvas) {
+            canvas.width = width;
+            canvas.height = height;
+        }
     };
     
     this.takeInput = function(direction) {
