@@ -118,7 +118,8 @@ var Game = new (function() {
     };
     
     this.resize = function(width, height) {
-        
+        canvas.width = width;
+        canvas.height = height;
     };
     
     this.takeInput = function(direction) {
@@ -155,6 +156,7 @@ var Game = new (function() {
 })();
 
 window.addEventListener("DOMContentLoaded", function(e) {
+    Game.resize(document.width, document.height);
     Game.loadLevel(1);
 }, false);
 
