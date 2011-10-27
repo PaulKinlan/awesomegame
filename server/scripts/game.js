@@ -171,12 +171,12 @@ window.addEventListener("resize", function(e) {
 });
 
 window.addEventListener("deviceorientation", function(e) {
-    var power = Math.abs(e.gamma) * 2; // convert to a unit vector of X
+    var power = Math.abs(e.gamma); // convert to a unit vector of X
     var angle = 0;
     if(e.gamma < 0)
       angle = 180;
     
-    Game.takeInput(Math.cos(angle * (Math.PI / 180)) * power);
+    Game.takeInput(Math.cos(angle * (Math.PI / 180)));
 }, false);
 
 
