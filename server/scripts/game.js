@@ -3,7 +3,7 @@ var Game = new (function() {
     var forceVector;
     var world;
     var canvas;
-    var content;
+    var context;
     var SCALE = 30;
     var ballBody;
     
